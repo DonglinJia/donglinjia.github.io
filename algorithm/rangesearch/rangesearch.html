@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <title>Leo | Algorithm | Range Search </title>
+                <link rel="stylesheet" href="algocss.css">
+                <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async>
+        </script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    processEscapes: true
+                }
+            });
+        </script>
+        </head>        
+        <body>
+                <h1>Algorithm I -- Range-Searchinging in Dictionary for Points</h1>
+                <h2>Table of contents:</h2>
+                <ul>
+                        <h3><li><a href="#Quadtrees">Quadtrees</a></h3>
+                        <ul>
+                                <li><a href="#Build tree">Build Quadtree</a></li>
+                                <li><a href="#Qoperation">Quadtree Operations</a></li>
+                                <li><a href="#Qrs">Quadtree Range Search</a></li>
+                        </ul></li>
+                        <h3><li><a href="#kd-Trees">kd-Trees</a></h3>
+                        <ul>
+                                <li><a href="#kdcons">Construct kd-Tree</a></li>
+                                <li><a href="#kdheight">Height kd-Tree</a></li>
+                                <li><a href="#kdop">kd-Tree Operations</a></li>
+                                <li><a href="#kdrs">kd-Tree Range Search</a></li>
+                        </ul></li>
+                        <h3><li><a href="#Range Trees">Range Trees</a></h3>
+                                <ul>
+                                        <li><a href="#bstalgo">BST Range Search Algorithm</a></li>
+                                        <li><a href="#Rss">Range Search Summary</a></li>
+                                        <li><a href="#rtqrt">Range Trees Query Runtime</a></li>
+                                        <li><a href="#rsa">Range Search Analysis</a></li>
+                                        <li><a href="#rthd">Range Trees Higer Dimensions</a></li>
+                                </ul>
+                        </li>
+                </ul>
+        <h2 id="Quadtrees">Quadtrees</h2>
+        <p>Consider we have n points $S = \{(x_0,y_0), (x_1,y_1), \cdots , (x_{n-1}, y_{n-1}) \}$ in the plane.</p>
+        <p>Assume: All points are within a square R</p>
+        <ul>
+            <li>Can find R by computing minimum and maximum x and y values in S</li>
+            <li>Ideally the width/height of R is a power of 2</li>
+        </ul>
+        <h3 id="Build tree">How to build the quadtree on S:</h3>
+        <ul>
+            <li>Root r of the quadtree corresponds to R</li>
+            <li>If R contains 0 or 1 points, then root r is a leaf that stores point</li>
+            <li>Else split: Partition R into four equal subsquares(quadrants) (i.e. $R_{NE}, R_{NW}, R_{SW}, R_{SE}$)</li>
+            <li>Root r then has four subtrees, say $T_{NE}, T_{NW}, T_{SW}, T_{SE}$</li>
+            <li>Recursively built the subtree and stop when there is only one point in the square</li>
+            <br>
+            <li>Convention: In terms of the points that lie on the split line, we claim that those points belong to right/top side</li>
+            <img src="quad1.png" alt="Quadtrees example" style="width: 400px; height:300px"> 
+            <img src="quad2.png" alt="Quadtrees example" style="width: 400px; height:300px"> ......
+            <img src="quad3.png" alt="Quadtrees example" style="width: 430px; height:300px">
+        </ul>
+        <h3 id="Qoperation">Quadtree Dictionary Operations:</h3>
+        <ul>
+            <li>Search: Similar to binary search trees and tries</li>
+            <li>Insert:
+                <ul>
+                    <li>Search for that point</li>
+                    <li>Split the leaf when there are two points in one square.</li>
+                </ul>
+            </li>
+           <li>Delete:
+               <ul>
+                   <li>Search for the point</li>
+                   <li>Remove the point</li>
+                   <li>If its parents has only one point left, then delete the parents (recursively to all its ancestors
+                       that have only one point left)
+                   </li>
+               </ul>
+           </li>
+        </ul>
+        <h3 id="Qrs">Quadtree Range Search</h3>
+        <ul>
+            <li><h4>Alogrithm:</h4></li>
+            <ol>QTree-RangeSearch(T,A)
+                <li>T: The root of a quadtree, A: Query rectangle</li>
+                <li>$\quad$ let R be the square associated with T</li>
+                <li>$\quad$ if $R\subset A)$ then</li>
+                <li>$\qquad$ report all points in T; return</li>
+                <li>$\quad$ if $(R \cap A\,\,is\,\,empty)$ then</li>
+                <li>$\qquad$ if p is in A return p</li>
+                <li>$\qquad$ else return</li>
+                <li>$\quad$ for each child vi of T do</li>
+                <li>$\qquad$ QTree-RangeSearch(v,A)</li>
+            </ol>
+        </ul>
+        <ul>
+            <li><h4>Time analysis:</h4>
+                <ul>
+                    <li>Might have bad distribution of points</li>
+                    <li>spread factor of points $S: \beta(S) = \frac{sidelength\,\,of\,\,R} {d_{min}}$</li>
+                    <li>where $d_{min}$ is the minimum distance between two points in S</li>
+                    <li>height of the quadtree: $h\in \Theta (log \beta(S))$</li>
+                    <li>Complexity to build initial tree: $\Theta(nh)$ worst-case</li>
+                    <li>Complexity of range search: $\Theta(nh)$ worst-case even we found nothing</li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="kd-Trees">kd-trees</h2>
+        <ul>
+            <li>Suppose we have n points $S = \{(x_0,y_0), (x_1, y_1), \cdots, (x_{n-1}, y_{n-1})\}$</li>
+            <li>Split the region such that roughly half the point are in each subtree</li>
+            <li>Each node of the kd-tree keeps track of a splitting line in one dimension (either vertical or horizontal)</li>
+            <li>Convention: Points on split lines belong to right/top side</li>
+            <li>Keep splitting, switching between vertical and horizontal lines, until every point is in a separate region</li>
+        </ul>
+        <h3 id="kdcons">Constructing kd-trees</h3>
+        <p>Build kd-tree with initial split by x on points S:</p>
+        <ul>
+            <li>If $|S| \le 1$ create a leaf and return</li>
+            <li>Else X:= Quick-Search(S,$\lfloor\frac {n} {2} \rfloor$ (select by x-coordinate)</li>
+            <li>Partition S by x-coordinate into $S_{x&lt;X}$ and $S_{x\ge X}$</li>
+            <li>Create left subtree recursively (splitting by y) for points $S_{x&lt;X}$</li>
+            <li>Create left subtree recursively (splitting by y) for points $S_{x\ge X}$</li>
+            <img src="kd1.png" alt="Quadtrees example" style="width: 400px; height:300px"> 
+            <img src="kd2.png" alt="Quadtrees example" style="width: 400px; height:300px">......
+            <img src="kd3.png" alt="Quadtrees example" style="width: 430px; height:300px">
+        </ul>
+        <p>Analysis</p>
+        <ul>
+            <li>Find X and partition S in $\Theta(n)$ expected time</li>
+            <li>$\Theta (n)$ expected time on each level in the tree</li>
+            <li>Total is $\Theta(height \dot n)$ expected time</li>
+            <li>Be able to reduced to $\Theta(nlogn + height \dot n)$ worst-case by pre-sorting (will be explain in the future)</li>
+        </ul>
+        <h3 id="kdheight">kd-tree height</h3>
+        <p>Assume first that the points are in general position(no two points have the same x/y-coordinate)</p>
+        <ul>
+            <li>$\lfloor \frac{n} {2} \rfloor$ points have been evenly puts into two sides</li>
+            <li>height h(n) satisfies the recursion $h(n) \le h(\lceil \frac {n} {2} \rceil) + 1 $; this gives us $h(n) \le \lceil log(n) \rceil$</li>
+            <li>thus we can build the kd-tree in $\Theta(nlogn)$ time and $O(n)$ space</li>
+        </ul>
+        <h3 id="kdop">kd-tree Dictionary Operations</h3>
+        <ul>
+            <li>Search: similar to binary search tree by suing indicated cooridinate</li>
+            <li>Insert: search, insert as new leaf</li>
+            <li>Delete: search, remove leaf and unary parents</li>
+            <p>After insert or delete, the split might no longer be at exact median and the height is no longer guaranteed to be $O(logn)$ even
+                    for points in general position.
+            </p>
+        </ul>
+        <h3 id="kdrs">kd-tree Range Search</h3>
+        <ul>
+            <li>every node is associated with a region</li>
+        </ul>
+        <ol>kd-Tree RangeSearch(T,R,A)
+            T: The root of a kd-tree, R: region associated with T, A: query rectangle
+            <li>$\quad$ if ($R\subset A$) then report all points in T; return</li>
+            <li>$\quad$ if ($R\cap A$ is empty) then return</li>
+            <li>$\quad$ if (T sotres a single point p) then</li>
+            <li>$\qquad$ if p is in A return p</li>
+            <li>$\qquad$ else return</li>
+            <li>$\quad$ if T stores split "is x < X"</li>
+            <li>$\qquad R_{l} = R \cup \{(x,y) : x < X\}$</li>
+            <li>$\qquad R_{r} = R \cup \{(x,y) : x \ge X\}$</li>
+            <li>$\qquad$ kdTree-RangeSearch(T.left, $R_l$, A)</li>
+            <li>$\qquad$ kdTree-RangeSearch(T.right, $R_r$, A)</li>
+            <li>$\quad$ else</li>
+            <li>$\qquad R_{l} = R \cup \{(x,y) : y < Y\}$</li>
+            <li>$\qquad R_{r} = R \cup \{(x,y) : y \ge Y\}$</li>
+            <li>$\qquad$ kdTree-RangeSearch(T.left, $R_l$, A)</li>
+            <li>$\qquad$ kdTree-RangeSearch(T.right, $R_r$, A)</li>
+            <img src="kdex.png" alt="kdexample" style="width: 430px; height:300px">
+        </ol>
+        <h3>kd-Tree Range Search Complexity</h3>
+        <ul>
+            <li>The complexity of range search in kd-trees is $O(s + \sqrt {n})$, where s is the number of reported points</li>
+            <ul>
+                <li>s can be anthing from 0 to n</li>
+                <li>No range-search can work in o(s) time since it must report the points</li>
+                <li>Q(n) is the number of "green" nodes:
+                    <ul>
+                        <li>kdTree-RangeSearch was called</li>
+                        <li>Neither $R\in A$ nor $R\cap A = \emptyset$</li>
+                    </ul>
+                </li>
+                <li>Q(n) satisfies the following recurrence relation:
+                    $$Q(n) \le 2Q(n/4) + O(1)$$
+                </li>
+                <li>This solves to $Q(n) \in O (\sqrt{n})$</li>
+            </ul>
+            <li><strong>For the higher dimensions:</strong>
+                <ul>
+                    <li>we have storage: $O(n)$</li>
+                    <li>Construction time is: $O(nlogn)$</li>
+                    <li>Range query time: $O(s+n^{1 - 1/d})$</li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="Range Trees">Range Trees</h2>
+        <ul>
+                <li>
+                        Apply time-space trade off, might waste in space but faster in search.
+                </li>
+                <li>Have a binary search tree T (sorted by x-coordinate); --> primary structrue</li>
+                <li>Each node v of T has an auxiliary structure T(v): a binary search tree (sorted by y-coordinate)</li>
+        </ul>
+        <h3 id="bstalgo">BST Range Search</h3>
+        
+        <ol>
+        <p style="color:blue">BST-RangeSearch(T, $k_1$, $k_2$)</p>
+        T: root of a binary search tree, $k_1$, $k_2$: search keys <br>
+        Return keys in T that are in range[$k_1,k_2$]
+                <li>$\quad$ if T = null then return</li>
+                <li>$\quad$ if $k_1 \le key(T) \le k_2$ then</li>
+                <li>$\qquad$ L = BST-RangeSearch(T.left, $k_1,k_2$)</li>
+                <li>$\qquad$ R = BST-RangeSearch(T.right, $k_1,k_2$)</li>
+                <li>$\qquad$ return $L\cup \{key(T)\} \cup R$</li>
+                <li>$\quad$ if key(T) < $k_1$ then</li>
+                <li>$\qquad$ return BST-RangeSearch(T.right, $k_1,k_2$)</li>
+                <li>$\quad$ if key(T) > $k_2$ then</li>
+                <li>$\qquad$ return BST-RangeSearch(T.left, $k_1,k_2$)</li>
+        </ol>
+        <p>Note: Keys are reported in in-order, i.e. in sorted order.</p>
+        <img src="rt1.png" alt="range-search-demo" style="width: 430px; height:300px">
+        <img src="rt2.png" alt="range-search-demo" style="width: 430px; height:300px">
+        <img src="rt3.png" alt="range-search-demo" style="width: 430px; height:300px">
+        <img src="rt5.png" alt="range-search-demo" style="width: 430px; height:300px">
+        <img src="rt6.png" alt="range-search-demo" style="width: 430px; height:300px">
+        <h3 id="Rss">Range Search Summary</h3>
+        <ul>
+                <li>Search for left boundary $k_1$ gives path ${\color{green} {P_1}}$</li>
+                <li>Search for right boundary $k_2$ gives path ${\color{green} {P_2}}$</li>
+                <li>Partition nodes of T into three groups:
+                        <ul>
+                                <li>${\color{green} {boundary\,\,nodes:}}$ nodes in $P_1$ or $P_2$</li>
+                                <li>${\color{red} {inside\,\,nodes:}}$ nodes that are right of $P_1$ and left of $P_2$</li>
+                                <li>${\color{blue} {outside\,\,nodes:}}$ nodes that are left of $P_1$ or right of $P_2$</li>
+                        </ul>
+                </li>
+                <li>Report all inside nodes</li>
+                <li>Test each boundary node and report if if it is in range</li>
+        </ul>
+        <h3 id="rsa">Range Search Analysis</h3>
+        <ul>
+                <li>Search for path ${\color{green} {P_1}}$: $O(logn)$</li>
+                <li>Search for path ${\color{green} {P_2}}$: $O(logn)$</li>
+                <li>$O(logn)$ ${\color{green} {boundary\,\,nodes}}$</li>
+                <li>There are many inside nodes.</li>
+                <li>We only need to topmost of them: allocate node v
+                        <ul>
+                                <li>not in $P_1$ or $P_2$, but parent is in $P_1$ or $P_2$ (but not both)</li>
+                                <li>if parent is in $P_1$, then v is right child</li>
+                                <li>if parent is in $P_2$, then v is left child</li>
+                        </ul>
+                </li>
+                <li>O(logn) allocation nodes. For each of them report all descendants</li>
+                <li>Similar to before, test each boundary node and report it if it is in range</li>
+                <li><p style="color:red">Run-time: O(#boundary nodes + # reported points) = O(logn + s)</p></li>
+        </ul>
+        <h3 id="rtqrt">Range Trees: Query Run-time</h3>
+        <ul>
+                <li>O(logn) time to find boundary and allocation nodes in primary tree</li>
+                <li>There are O(logn) allocation nodes</li>
+                <li>O(logn + s) time for each allocation node v</li>
+                <li>Two allocation nodes have no common point in their trees, so $\sum s_v \le s$</li>
+                <li>Time for range-query in range tree: ${\color{red} {O(s+log^{2}n)}}$</li>
+        </ul>
+        <h3 id="rthd">Range Trees: Higher Dimensions</h3>
+        <ul>
+                <li>Range trees can be generalized to d-dimensional space.
+                        <ul>
+                                <li>Space: $O(n(logn)^{d-1})$</li>
+                                <li>Construction time: $O(n(logn)^{d-1})$</li>
+                                <li>Range query time: $O(s+(logn)^d)$</li>
+                        </ul>
+                </li>
+        </ul>
+        </body>
+</html>

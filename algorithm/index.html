@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Leo | Algorithm</title>
+        <link rel="stylesheet" href="algocss.css">
+        <style>
+                body {background-color:rgb(205, 226, 240)}
+            </style>
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async>
+        </script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    processEscapes: true
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Algorithm I</h1>
+        <h3>Table of contents</h3>
+        <ul>
+            <li> <a href="#Order Notation">Order Notation</a></li>
+            <li> <a href="#Priority Queues">Priority Queues</a></li>
+            <li> <a href="#Dictionary">Dictionary</a></li>
+            <li> <a href="#Trie">Trie</a></li>
+            <li> <a href="rangesearch/rangesearch.html" target="_blank"> Range Search</a></li>
+            <li> <a href="strcomparison/strcompare.html" target="_blank">String Comparsion</a></li>
+            <li> <a href="strcompression/stringcompression.html" target="_blank">String Compression</a></li>
+        </ul>
+        <h2 id="Order Notation">Order Notation</h2>
+        <ul>
+            <li>$O-$notation: $f(n) \in O(g(n))$ if there exist constants $c>0$ and $n_0 > 0$ such that $ 0 \le f(n) \le cg(n)$ for all $n\ge n_0$</li>
+            <li>$\Omega-$notation: $f(n) \in \Omega(g(n))$ if there exist constants $c>0$ and $n_0 > 0$ such that $ 0 \le cg(n) \le f(n)$ for all $n\ge n_0$</li>
+            <li>$\Theta-$notation: $f(n) \in \Theta(g(n))$ if there exist constants $c_1,c_2>0$ and $n_0 > 0$ such that $ 0 \le c_1 g(n) \le f(n) \le c_2 g(n)$ for all $n\ge n_0$</li>
+            <li>$o-$notation: $f(n) \in o(g(n))$ if for all constants $c>0$, there exists a constant $n_0 > 0$ such that $ 0 \le f(n) \le cg(n)$ for all $n\ge n_0$</li>
+            <li>$\omega-$notation: $f(n) \in \omega(g(n))$ if for all constants $c>0$, there exists a constant $n_0 > 0$ such that $ 0 \le cg(n) \le f(n)$ for all $n\ge n_0$</li>
+            <li>Relationship between Order Notations
+                <ul>
+                    <br>
+                <li>$f(n) \in \Theta (g(n)) \Leftrightarrow g(n) \in \Theta(f(n))$</li>
+                <li>$f(n) \in O(g(n)) \Leftrightarrow g(n) \in \Omega(f(n))$</li>
+                <li>$f(n) \in o(g(n)) \Leftrightarrow g(n) \in \omega(f(n))$</li>
+                <br>
+                <li>$f(n) \in \Theta(g(n)) \Leftrightarrow f(n) \in O(g(n))$ and $f(n) \in \Omega(g(n))$</li>
+                <li>$f(n) \in o(g(n)) \Rightarrow f(n) \in O(g(n))$</li>
+                <li>$f(n) \in \omega(g(n)) \Rightarrow f(n) \in \Omega(g(n))$</li>
+                </ul>
+            </li>
+            <br>
+            <li>
+                <p>Techniques for Order Notation:</p>
+                <p>Suppose that $f(n) > 0$ and $g(n) > 0$ for all $n\ge n_0$. Suppose that</p>
+                $$ L = \lim_{n\to\infty} \frac{f(n)} {g(n)}$$
+                <p>Then</p>
+                $$f(n) \in o(g(n)) \quad if\,\,L=0$$
+                $$f(n) \in \Theta(g(n)) \quad if\,\,0 < L < \infty$$
+                $$f(n) \in \omega(g(n)) \quad if\,\,L=\infty$$
+                </ul>
+            </li>
+            <br>
+            <li><strong>Maximum Rules:</strong> Suppose that $f(n) > 0$ and $g(n) > 0$ for all $n \ge n_0$. Then:
+                <ul>
+                    <li>$O(f(n) + g(n)) = O(max\{f(n),g(n)\})$</li>
+                    <li>$\Omega(f(n)+g(n)) = \Omega(max\{f(n),g(n)\})$</li>
+                    <li>$\Theta(f(n)+g(n)) = \Theta(max\{f(n),g(n)\})$</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2 id="Priority Queues">Priority Queues</h2>
+        <h2 id="Dictionary">Dictionary</h2>
+        <h2 id="Trie">Trie</h2>
+    </body>
+</html>

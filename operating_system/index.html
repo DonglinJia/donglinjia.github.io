@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Leo | Operating System</title>
+        <link rel="stylesheet" href="oscss.css">    
+    </head>
+    <body>
+        <h1>Operating System</h1>
+        <h3> Table of contents</h3>
+        <h4><a href="#Thread">Thread</a></h4>
+        <h4><a href="#Concurrent Program Execution">Concurrent Program Execution</a></h4>
+        <h4><a href="#Timesharing and Content Switches">Timesharing and Content Swiches</a></h4>
+        <h4><a href="#Thread States">Thread States</a></h4>
+        <h4><a href="#Interrupt">Interrupt</a></h4>
+        <h4><a href="#preemptive scheduling">Preemptive Scheduling</a></h4>
+        <h2 id="Thread">Thread</h2>
+        <ul>
+            <li>What is a thread?
+                <ul>
+                    <li>Thread is a sequence of instructions.</li>
+                    <li>A normal sequential program consists of a single thread of execution</li>
+                    <li>Threads provide a way for programmers to express concurrency
+                        (i.e. multiple programs or sequences of instructions running, or 
+                        appearing to run at the same time) in a program</li>
+                    <li>There are multiple threads of execution
+                        <ul>
+                            <li>Threads may perform the same task.</li>
+                            <li>Threads may perform different tasks.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>Properties of Thread:
+                <ul>
+                    <li>Resource Utilization: blocked/waiting threads give up resource</li>
+                    <li>Parallelism: multiple threads exectuing simultaneously</li>
+                    <li>Responsiveness: dedicate threads to</li>
+                    <li>Priority: higher priority, more CPU time; lower priority, less CPU time</li>
+                    <li>Modularization: organization of execution tasks</li>
+                </ul>
+            </li>
+            <li>Important Notes for Thread:
+                <ul>
+                    <li>A thread can create new threads using thread_fork</li>
+                    <li>All threads share the program global variables and heap, but they have
+                        private stack
+                    </li>
+                    <li>Operating system control which thread to run, orignal thread and the new 
+                        thread runs concurrenctly.
+                    </li>
+                    <li>Once the threads start running, you cannot predict the behavior since you have 
+                        no control.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="Concurrent Program Execution">Concurrent Program Execution</h2>
+        <ul>
+            <li>One program has at least one thread and all threads share that program address space.</li>
+            <li>Operating system job to prevent stacks overlapping each other --> but also make sure
+                to get the maximum stack
+            </li>
+            <li>multithread program gives:
+                 <ul>
+                     <li>the illusion that be able to runs multi-things at the same time</li>
+                     <li>better organization of the program</li>
+                     <li>better performance of the program</li>
+                 </ul>
+                </li>
+            <li>Implementation Concurrent Thread
+                <ul>
+                    <li>Hardware support: P(processors)C(cores)M(multithreading per core)
+                        PCM threads can execute simultaneously.
+                    </li>
+                    <li>Timesharing: Multiple threads take turns on the same hardware(share CPU); rapidly switching 
+                        between threads so all make progress; they are all making progress, use CPU one by one
+                    </li>
+                    <li>Hardware support + Timesharing: PCM + timesharing</li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="Timesharing and Content Switches">Timesharing and Content Switches</h2>
+            <ul>
+                <li>When timesharing, the switch from one thread to another is called a content switch</li>
+                <li>During the timesharing:
+                    <ul>
+                        <li>decide which thread will run next (go to operating system schedulor)</li>
+                        <li>save the states(register value) of the current thread</li>
+                        <li>load the states(register value) of the nwe thread</li>
+                        <li>make sure that the thread that running CPU again at the exact position
+                            and exact states when it pick up
+                        </li>
+                        <li>Thread context must be saved/restored carefully</li>
+                        <li>switchframe_switch (callee): save all the callee-save registers</li>
+                        <li>thread_switch (caller): save all the caller-save registers</li>
+                    </ul>
+                </li>
+            <li>What causes context switch?
+                <ul>
+                    <li>thread_yield: running thread voluntarily allows other threads to run; give up CPU voluntarily</li>
+                    <li>thread_exit: running thread is terminated</li>
+                </ul>
+            </li>
+            </ul>
+        <h2 id="Thread States">Thread States</h2>
+        <ul>
+            <li>Thread states (3 states)
+                <ul>
+                    <li>running: thread is executing on the CPU right now; if CPU only support one thread
+                        at a time, then only one thread has that state.
+                    </li>
+                    <li>ready: the thread is not waiting for anything except CPU; waiting to run instructions</li>
+                    <li>blocked: any threads that is waiting for something that can continue. waiting to receive the "order"
+                        to execute 
+                    </li>
+                    <li>transection:
+                        <ul>
+                            <li>ready to running: called by contextswitch</li>
+                            <li>running to ready: called by yield</li>
+                            <li>running to blocked: need something so that need to go to blocked to wait for that</li>
+                            <li>blocked to ready: when something becomes available, then some threads will take the blocked thread
+                                and push to ready state
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>Thread Stack after Coluntary Context Switch
+                <ul>
+                    <li>program calls thread_yield first to yield CPU</li>
+                    <li>thread_yield then calls thread_switch, to perform a context switch</li>
+                    <li>thread_switch chooses a new thread, calls switchframe_switch to perfrom low-level content switch</li>
+                </ul>
+            </li>
+            <li>Timesharing and Preemption:
+                <ul>
+                    <li>timesharing -- scheduling quantum (the upper bound on how long a thread can run before
+                        must yield the CPU), it is involunteering stop.
+                    </li>
+                    <li>preemption forces a running thread to stop</li>
+                    <li>Since CPU can only run one thread and that one is not aware that it needs to stop; the only way to stop a thread is through hardware -- using Interrupt!</li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="Interrupt">Interrupt</h2> <a href=""></a>
+        <ul>
+            <li>an interrupt is an event that occurs during the execution of a program</li>
+            <li>interrupts are caused by system devices</li>
+            <li>CPU know who causes the interrupt and OS handle the interrupts</li>
+            <li>CPU has a trap table where stores some addresses of some codes.
+                <ul>
+                    <li>CPU --> receive interrupts --> stop executing user's program --> execute the code 
+                        stored in address of the trap table (Interrupt handler (operating system code))
+                    </li>
+                </ul>
+            </li>
+            <li>Interrupt handler
+                <ol>
+                    <li>create a trap frame; save every register in the system</li>
+                    <li>called the actual handler --> perform device-specific processing</li>
+                    <li>restores the saved thread context from the trap frame and resuems execution of the thread</li>
+                </ol>
+            </li>
+            <li>Trap frame is always followed by the interrupt</li>
+            <li>Interrupt handler stack frame followed by the trap frame</li>
+            <li>Difference between trap frame and switch functions
+                <ul>
+                    <li>trap frame saves all the registers comes before (the previous running program's registers)</li>
+                    <li>thread_switch save all the registers between trap frame and itself (i.e. callee-save registers)</li>
+                    <li>switchframe save all the registers (i.e. caller-save registers)</li>
+                    <li>trap frame called by CPU not program(cannot be predict when to be called, so we need to save every register), 
+                        while switch functions called by program!</li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="preemptive scheduling">Preemptive Scheduling</h2>
+        <ul>
+            <li>Preemptive Scheduling uses the schduling quantum</li>
+            <li>Quantum cannot be too long --> not effective timesharing; cannot be too short --> spend more time on timesharing, not do so much work!</li>
+            <li>Every time the new thread get a fresh quantum, so quantum does not carry over</li>
+            <li>Every computer has clock --> run the count down --> when the count down is expire --> clock fire a interrupt --> causes CPU to execute the 
+                interrupt handler so OS take control of the interrupts (i.e. execute content switch (yield -> thread_switch -> switchframe))
+            <li> Two passes to implement
+                <ol>
+                    <li>Every time there is a content switch, tell the clock to start a new count down --> really slow</li>
+                    <li>Clock count down in a short period and repeat, when there is a time interrupt, go check (when the thread start running (record it))
+                        whether it exceed its quantum, if yes, kick out, otherwise keep running.
+                    </li>
+                </ol>
+            </li>
+            </li>
+        </ul>
+
+    </body>
+</html>
