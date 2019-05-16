@@ -56,9 +56,16 @@
                 <p>Suppose that $f(n) > 0$ and $g(n) > 0$ for all $n\ge n_0$. Suppose that</p>
                 $$ L = \lim_{n\to\infty} \frac{f(n)} {g(n)}$$
                 <p>Then</p>
-                $$f(n) \in o(g(n)) \quad if\,\,L=0$$
-                $$f(n) \in \Theta(g(n)) \quad if\,\,0 < L < \infty$$
-                $$f(n) \in \omega(g(n)) \quad if\,\,L=\infty$$
+                
+                \[
+                f(n) \in
+                \begin{cases}
+                o(g(n))  &\text{if }\,\,L=0 \\
+                \Theta(g(n))  &\text{if }\,\,0 < L < \infty \\
+                \omega(g(n))  &\text{if }\,\,L=\infty
+                \end{cases}
+                \]
+                
                 </ul>
             </li>
             <br>
