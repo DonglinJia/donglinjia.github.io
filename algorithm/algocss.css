@@ -1,3 +1,9 @@
 h1 {
     text-align: center;
 }
+
+#corner {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
