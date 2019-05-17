@@ -14,9 +14,13 @@
         <h4><a href="#Thread States">Thread States</a></h4>
         <h4><a href="#Interrupt">Interrupt</a></h4>
         <h4><a href="#preemptive scheduling">Preemptive Scheduling</a></h4>
+        <h4><a href="#synchronization">Synchronization</a></h4>
+        <h4><a href="#CS">Critical Section</a></h4>
+        <h4><a href="#rc">Race condition</a></h4>
+        <h4><a href="#lock">Lock</a></h4>
         <h2 id="Thread">Thread</h2>
         <ul>
-            <li>What is a thread?
+            <li><strong>What is a thread?</strong>
                 <ul>
                     <li>Thread is a sequence of instructions.</li>
                     <li>A normal sequential program consists of a single thread of execution</li>
@@ -31,7 +35,7 @@
                     </li>
                 </ul>
             </li>
-            <li>Properties of Thread:
+            <li><strong>Properties of Thread:</strong>
                 <ul>
                     <li>Resource Utilization: blocked/waiting threads give up resource</li>
                     <li>Parallelism: multiple threads exectuing simultaneously</li>
@@ -40,7 +44,7 @@
                     <li>Modularization: organization of execution tasks</li>
                 </ul>
             </li>
-            <li>Important Notes for Thread:
+            <li><strong>Important Notes for Thread:</strong>
                 <ul>
                     <li>A thread can create new threads using thread_fork</li>
                     <li>All threads share the program global variables and heap, but they have
@@ -61,14 +65,14 @@
             <li>Operating system job to prevent stacks overlapping each other --> but also make sure
                 to get the maximum stack
             </li>
-            <li>multithread program gives:
+            <li><strong>multithread program gives:</strong>
                  <ul>
                      <li>the illusion that be able to runs multi-things at the same time</li>
                      <li>better organization of the program</li>
                      <li>better performance of the program</li>
                  </ul>
                 </li>
-            <li>Implementation Concurrent Thread
+            <li><strong>Implementation Concurrent Thread</strong>
                 <ul>
                     <li>Hardware support: P(processors)C(cores)M(multithreading per core)
                         PCM threads can execute simultaneously.
@@ -83,29 +87,37 @@
         <h2 id="Timesharing and Content Switches">Timesharing and Content Switches</h2>
             <ul>
                 <li>When timesharing, the switch from one thread to another is called a content switch</li>
-                <li>During the timesharing:
+                <li><strong>During the timesharing:</strong>
                     <ul>
                         <li>decide which thread will run next (go to operating system schedulor)</li>
                         <li>save the states(register value) of the current thread</li>
                         <li>load the states(register value) of the nwe thread</li>
-                        <li>make sure that the thread that running CPU again at the exact position
+                        <strong><li style="color:red">make sure that the thread that running CPU again at the exact position
                             and exact states when it pick up
                         </li>
+                        </strong>
                         <li>Thread context must be saved/restored carefully</li>
                         <li>switchframe_switch (callee): save all the callee-save registers</li>
                         <li>thread_switch (caller): save all the caller-save registers</li>
                     </ul>
                 </li>
-            <li>What causes context switch?
+            <li><strong>What causes context switch?</strong>
                 <ul>
                     <li>thread_yield: running thread voluntarily allows other threads to run; give up CPU voluntarily</li>
-                    <li>thread_exit: running thread is terminated</li>
+                </ul>
+            </li>
+            <li><strong>Four ways of context-switch:</strong>
+                <ul>
+                    <li>Go to Blocked state --> wait something</li>
+                    <li>Preemption: involuntarily give up the CPU since the scheduling quantum count down expires --> interrupts --> context switch</li>
+                    <li>Thread_yield: voluntarily called thread yield</li>
+                    <li>Thread terminated;</li>
                 </ul>
             </li>
             </ul>
         <h2 id="Thread States">Thread States</h2>
         <ul>
-            <li>Thread states (3 states)
+            <li><strong>Thread states (3 states)</strong>
                 <ul>
                     <li>running: thread is executing on the CPU right now; if CPU only support one thread
                         at a time, then only one thread has that state.
@@ -126,14 +138,14 @@
                     </li>
                 </ul>
             </li>
-            <li>Thread Stack after Coluntary Context Switch
+            <li><strong>Thread Stack after Coluntary Context Switch</strong>
                 <ul>
                     <li>program calls thread_yield first to yield CPU</li>
                     <li>thread_yield then calls thread_switch, to perform a context switch</li>
                     <li>thread_switch chooses a new thread, calls switchframe_switch to perfrom low-level content switch</li>
                 </ul>
             </li>
-            <li>Timesharing and Preemption:
+            <li><strong>Timesharing and Preemption:</strong>
                 <ul>
                     <li>timesharing -- scheduling quantum (the upper bound on how long a thread can run before
                         must yield the CPU), it is involunteering stop.
@@ -155,7 +167,7 @@
                     </li>
                 </ul>
             </li>
-            <li>Interrupt handler
+            <li><strong>Interrupt handler</strong>
                 <ol>
                     <li>create a trap frame; save every register in the system</li>
                     <li>called the actual handler --> perform device-specific processing</li>
@@ -164,7 +176,7 @@
             </li>
             <li>Trap frame is always followed by the interrupt</li>
             <li>Interrupt handler stack frame followed by the trap frame</li>
-            <li>Difference between trap frame and switch functions
+            <li><strong>Difference between trap frame and switch functions</strong>
                 <ul>
                     <li>trap frame saves all the registers comes before (the previous running program's registers)</li>
                     <li>thread_switch save all the registers between trap frame and itself (i.e. callee-save registers)</li>
@@ -180,8 +192,8 @@
             <li>Quantum cannot be too long --> not effective timesharing; cannot be too short --> spend more time on timesharing, not do so much work!</li>
             <li>Every time the new thread get a fresh quantum, so quantum does not carry over</li>
             <li>Every computer has clock --> run the count down --> when the count down is expire --> clock fire a interrupt --> causes CPU to execute the 
-                interrupt handler so OS take control of the interrupts (i.e. execute content switch (yield -> thread_switch -> switchframe))
-            <li> Two passes to implement
+                interrupt handler so OS take control of the interrupts (i.e. execute content switch (yield -> thread_switch -> switchframe)
+            <li><strong>Two passes to implement</strong>
                 <ol>
                     <li>Every time there is a content switch, tell the clock to start a new count down --> really slow</li>
                     <li>Clock count down in a short period and repeat, when there is a time interrupt, go check (when the thread start running (record it))
@@ -189,6 +201,53 @@
                     </li>
                 </ol>
             </li>
+            </li>
+        </ul>
+        <h2 id="synchronization">Synchronization</h2>
+        <ul>
+            <li>
+                All threads in a concurrent program <strong style="color:red">share access</strong> to the program's global variables and the heap (read & write).
+            </li>
+            <li>Any block of codes in a concurrent program where we have multiple threads reading and writing the shared variable(either global or heap) 
+                is called <strong style="color: red">critical section</strong>
+            </li>
+        </ul>
+        <h2 id="CS">Critical Section</h2>
+            <ul>
+                <li>The order of the instructions to be exectued in that section <strong style="color: red">matters</strong></li>
+                <li>no control during preemption, no control over which thread run next --> OS have ability controlling</li>
+                <li>Context switch happens expected to assembling, instead of C code.</li>
+                <li>There are multiple programs running background, therefore, interrupts happens every time.</li>
+            </ul>
+        </ul>
+        <h2 id="rc">Race Condition</h2>
+        <ul>
+            <li>when the program result depends on the order of execution.</li>
+            <li>can cause: incorrect output, return error; memory error</li>
+            <li>Race conditions occurs when multiple threads are reading and writing the same memory at the same time</li>
+            <li>Source of race conditions:
+                <ul>
+                    <li>implementation</li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </li>
+            <li>Identify race conditions
+                <ul>
+                    <li>inspect each variable; is it possible for multiple threads to read/write it at the same time?</li>
+                    <li>constants and memoery that all threads only <strong style="color:red">read</strong>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="lock">Enforcing Mutual Exclusion With Lock</h2>
+        <ul>
+            <li>acquire/release must ensure that only one thread at a time can hold the lock, even if both attempt to Acquire at the same time.</li>
+            <li>If a thread cannot Acquire the lock immediately, it must wait until the lock is available.</li>
+            <li>Must <strong style="color: red">ACQUIRE</strong> the lock before exeucting the shared variable.</li>
+            <li>C code cannot stop the interrupts & context switch, we need hardware to help 
+                <ul>
+                    <li>provide a way to implement <strong style="color: red">atomic test-and-set</strong> (i.e. atomic means cannot be interrupted!) for synchoronization primitives like locks</li>
+                </ul>
             </li>
         </ul>
         <a href="#top" style="position:fixed; right: 20px; top: 50px">Back To Top</a>
