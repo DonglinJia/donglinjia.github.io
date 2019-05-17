@@ -2,6 +2,10 @@ h1 {
     text-align: center;
 }
 
+h4 {
+    text-align: center;
+}
+
 #corner {
     position: fixed;
     bottom: 20px;
