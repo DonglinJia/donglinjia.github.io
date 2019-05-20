@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Leo | Graph Theory | Spanning tree</title>
+        <link rel="stylesheet" href="graphtheorycss.css">
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async>
+        </script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    processEscapes: true
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Spanning tree</h1>
+        <a href="index.html" style="position:fixed;right:20px;top:20px">Go to previous page.</a>
+        <p style="font-size:20px">A spanning tree is a subset of Graph G, which has all the vertices covered with minimum possible number of edges.</p>
+        <br>
+        <p style="font-size:20px"><strong>Theorems:</strong></p>
+        <ul>
+            <li>G is connected if and only if G has a spanning tree.
+                <ul>
+                    <li>Corllary: if $G$ has connected with $n$ vertices and $n-1$ edges, then G is a tree.</li>
+                    <div style="color: blue">
+                        <p>Proof:</p> 
+                        <p>Since G is connect, so G has a spanning tree T.</p>
+                        <p>Then T has $n-1$ edges. But G has $n-1$ edges as well.</p>
+                        <p>So G is a tree as well.</p>
+                    </div>
+                    <li>Suppose G has n vertices. If any 2 of 3 following conditions hold for G, then G is a tree.
+                        <ul>
+                            <li>G is connected.</li>
+                            <li>G has no cycle.</li>
+                            <li>G has n-1 edges.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>If $T$ is a spanning tree of $G$ and $e$ is an edge of $G$ not in $T$, then $T + e$ contains exactly one cycle C.
+                If $e'$ is an edge of C, then $T + e - e'$ is a spanning tree.
+                <div style="color: blue">
+                    <p>Proof:</p>
+                    <p>Let $e = uv$. Any cycle in $T + e$ must use e.</p>
+                    <p>Since T has no cycle, such a cycle consists of e and a $u-v$ path in T.</p>
+                    <p>Since there is a unique $uv$ path in T, there is exactly one cycle in $T+e$</p>
+                    <p>Let $e'$ be an edge on $C$, then $e'$ is not a bridge.</p>
+                    <p>So $T+e-e'$ is connected. Removing $e'$ destroy the only cycle in $T+e$.</p>
+                    <p>Therefore $T+e-e'$ has no cycle and it is a tree.</p>
+                    <p>(Alternatively, $T+e-e'$ has the same number of edges as T, so it is a tree)</p>
+                </div>
+            </li>
+            <li>No graph contains exactly 2 spanning tree.</li>
+            <li>If $T$ is a spanning tree of $G$ and $e$ is an edge of $T$, then $T_e$ has 2 components, say $H$ is one of them.
+                If $e'$ is in the cut induced by $V(H)$ in G, then $T-e+e'$ is a spanning tree of $G$.
+            </li>
+        </ul>
+        <br>
+        <br>
+        <h1>Bipartite characterization:</h1>
+        <strong style="font-size:20px;margin:20px">Theorem: G is bipartitle if and only if G does not contains an odd cycle.</strong>
+        <div style="color:blue;margin:40px">
+            <p>Proof:</p>
+            <p>This theorem has a if and only if relationship, therefore we need to prove in both directions.</p>
+            <p>$\Rightarrow$</p>
+            <p>Suppose $G$ is bipartite with bipartition, say $A$ and $B$.</p>
+            <p>Let $C=v_1, v_2, \cdots, v_k, v_1$ be a cycle of odd length in $G$</p>
+            <p>WLOG, $v_1 \in A$, then $v_2 \in B$, $v_3 \in A, v_4 \in B, \cdots$</p>
+            <p>Since $k$ is odd, so $v_k \in A$, but $v_k-v_1$ is an edge and both $v_k, v_1 \in A$ that is <strong style="color:red">contradiciton</strong></p>
+            <p>Therefore $G$ does not contain an odd cycle.</p>
+            <br>
+            <p>$\Leftarrow$</p>
+            <p>Suppose $G$ is not bipartite, then there exist a non-bipartite component $H$.</p>
+            <p>Since $H$ is connected, it has a spanning tree $T$.</p>
+            <p>Since T is partite,, thus it has bipartition (A,B)</p>
+            <p>Since $H$ is not bipartite, it contains an edge that ions 2 vertices in $B$ (WLOG) s
+                say that $e=uv$
+            </p>
+            <p>Let $v_1,v_2,\cdots, v_k$ be the unique $u-v$ path in $T$ (v_1 = u, v_k = v)</p>
+            <p>Then $v_1 \in B, v_2\in A, v_3\in B, \cdots$</p>
+            <p>Since $v_k \in B$, $k$ is odd. Then $v_1.v_2.\cdots. v_k, v_1$ is a cycle of length k, which is odd.</p>
+        </div>
+    </body>
+</html>
