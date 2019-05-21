@@ -5,3 +5,15 @@ p {
 h1 {
     text-align: center;
 }
+
+a:link {
+    color: orange;
+}
+
+a:visited {
+    color: white;
+}
+
+a:active {
+    color:pink;
+}
