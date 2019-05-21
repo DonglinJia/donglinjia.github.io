@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Leo | Planar & non-planar</title>
+        <link rel="stylesheet" href="graphtheorycss.css">
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async>
+        </script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    processEscapes: true
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <h1 id="top">Planar graph</h1>
+        <a href="index.html" style="position:fixed;right:20px;top:20px">Go to previous page</a>
+        <h2>Key Defination:</h2>
+            <ul>
+                <li>A <strong>planar embedding</strong> of $G$ is a drawing of $G$ on the plane such that vertices are different points and edges
+                    are lines that join vertices s.t. they do not intersect (except at common endpoints)</li>
+                <li> A graph that has a planar embedding is a planar graph.</li>
+                <li>A <strong>face</strong> of a planar embedding is a connected region on the plane (not separated by lines). Two faces are adjacent
+                    if they share at least two edges.</li>
+                <li>For a connected planar graph, the boundary walk of a face is a closed walk on the edges around the boundry of the region once around.
+                    The degree of the face is the length of its boundry walk.</li>
+                <li>Handshaking lemma for Faces:
+                    <ul>
+                        <li>Let $G$ be a planar graph with a planar embedding when $F$ is the set of all faces.
+                            Then $$ \sum_{f\in F} deg(f) = 2 |E(G)|$$
+                        </li>
+                        <li style="color:blue">
+                            proof: each edge contributes 2 to the sum of face degrees. One for each side of the edge.
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        <br>
+        <p>Observation: if $e$ is a bridge, then the two sides of $e$ are in the same face. 
+            Otherwise, they are in different faces, since $e$ is in a cycle.
+        </p>
+        <br>
+        <h2>Jordan Curve theorem:</h2>
+        <ul>
+            <li>Every single closed curve (cycle) on the plane separates the plane into 2 parts, one inside and one outside</li>
+        </ul>
+        <br>
+        <h2>Euler's Formula</h2>
+        <ul>
+            <li>A graph can be different embedding, consider n represents the number of vertices, m represents the number of edges, s represents
+                the number of faces: then we have,
+                \[
+                    \begin{aligned}
+                        n - m + s &= 2 \\
+                        n - m + s &= 1 + (\text{#}\,\,\text{of} \,\, \text{components})
+                    \end{aligned}
+                \]
+            </li>
+            <li>Theorem: For a connected planar graph with an embedding with n vertices, m edges and s faces: $n - m + s = 2$ </li>
+            <div style="color:blue">
+                <p>proof by induction: (fix n) inducted on m</p>
+                <p>Base case: $m = n - 1$ (spanning tree), thus $s=1$ (no cycles, only one face) \rightarrow the statement holds</p>
+                <p>Inductive Hypotheses: Assume Euler's formula holds for any connected planar graph with n vertices, $m-1$ edges</p>
+                <p>Inductive Step: Suppose $G$ is connected, planar, n vertices, m edges and s faces</p>
+                <div style="margin-left: 101px">
+                    <p>Let $e$ be an edge in a cycle of $G$, then $G - e$ is connected an planar.</p>
+                    <p>The two sides of $e$ and different faces in $G$, and they merge into one faces in $G-e$ \rightarrow $s-1$ faces</p>
+                    <p>By Inductive Hypotheses, the Euler's formula holds for $G-e$</p>
+                    <p>So  $n-(m-1) + (s-1) = 2 \Rightarrow n - m + 1 + s -1 = n - m + s = 2$</p>
+                </div>  
+            </div>
+        </ul>
+        <h2>Platonic Solids</h2>
+        <p>If $G$ can be embedded on a planar, then $G$ can be embedded on a sphere. We then cut across each face to obtain a polyhedron.</p>
+        <p><strong>Definition: a connected planar graph is platonic if it has an embedding where every vertex has same degree $(\ge 3)$ and every face has some degree.</strong></p>
+        <div style="color:blue">
+            \[
+                \begin{cases}
+                n \cdot d_v &= 2m &\text{basic handshaking lemma} \\
+                s \cdot d_f &= 2m &\text{handshaking lemma for faces} \\
+                n - m + s &= 2 &\text{Euler's Formula}
+                \end{cases}
+            \]
+        </div>
+        <ul>
+            <li>When $d_v=3, d_f=3, n=4, m=6, s=4$, it is a <a href="https://en.wikipedia.org/wiki/Tetrahedron" target="_blank">tetrahedron</a></li>
+            <li>When $d_v=3, d_f=4, n=8, m=12, s=6$ it is a <a href="https://en.wikipedia.org/wiki/Cube" target="_blank">cube</a></li>
+            <li>When $d_v=4, d_f=3, n=6, m=12, s=8$, it is a <a href="https://en.wikipedia.org/wiki/Octahedron" target="_blank">octahedron</a></li>
+            <li>when $d_v=3, d_f=5, n=20, m=30, s=12$, it is a <a href="https://en.wikipedia.org/wiki/Regular_dodecahedron" target="_blank">dodecahedron</a></li>
+            <li>When $d_v=5, d_f=3, n=12, m=30, s=20$, it is a <a href="https://en.wikipedia.org/wiki/Icosahedron" target="_blank">icosahedron</a></li>
+        </ul>
+        <a href="#top" style="position:fixed;right:20px;bottom:20px">Back To Top</a>
+    </body>
+</html>
