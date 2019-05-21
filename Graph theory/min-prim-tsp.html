@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Leo | Graph Theory | Minimum Spanning tree and TSP</title>
+        <link rel="stylesheet" href="graphtheorycss.css">
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async>
+        </script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    processEscapes: true
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Minimum Spanning Tree (MST)</h1>
+        <a href="index.html" style="position:fixed;right:20px;top:20px">Go to previous page</a>
+        <p>Given connected graph G, weight function $w: E(G) \rightarrow \mathbb(R)$</p>
+        <p>Goal: find a spanning tree whose total edge weight minimized.</p>
+        <p>Notation: $w(e)$ is the weight of $e$.
+            If $H$ is a subgraph of $G$, $$w(H) = \sum_{e\in E(G)} w(e)$$
+        </p>
+        <h1>Prim's Algorithm</h1>
+        <ol>
+            <li>Let $v$ be any vertex. Let $T$ be the tree with just $v$.</li>
+            <li>While $T$ is not a spanning tree.
+                <ol>
+                    <li>look at all the edges in the cut induced by $V(T)$</li>
+                    <li>Pick $e=uv$ to be an edge of smallest weight in the cut (say $u\in V(T), v \not \in V(T)$)</li>
+                    <li>Add $v$ to $V(T)$, add $e$ to $E(T)$</li>
+                </ol>
+            </li>
+        </ol>
+        <h3 style="margin:20px">Theorem: Prim's algorithm produces a MST.</h3>
+        <div style="color:blue"><p>Proof:</p>
+        <p>Let $T_1, T_2, T_3, \cdots, T_n$ be the trees produced by the algorithm at each step, 
+            where the order of the edges added is $e_1, e_2, \cdots, e_{n-1}$, i.e. $T_{k+1} = T_k + e_k$
+        </p>
+        <p>Prove by induction on k that each $T_k$ is a subgraph of a MST. If so, 
+            then $T_n$ is a spinning tree contained in a MST, so $T_n$ is a MST
+        </p>
+        <br>
+        <p>Base case: For $k=1$, $T_1$ is just one vertex, which is any MST</p>
+        <p>Induction Hypotheses: Assume $T_k$ is a subgraph of a MST, $T_k$ for some k</p>
+        <p>Induction Step: Show $T_{k+1}$ is a subgraph of some MST.</p>
+        <div style="margin-left:103px">
+            <p>If $e_k \in E(T^{*})$, then $T_{k+1}$ is a subgraph of $T^{k}$ and we are done!</p>
+            <p>Assume $e_k \not \in E(T^{*}$), then $T^{*} + e_k - e'$ is also a spanning tree.</p>
+            <p>The algorithm chose $e_k$ when looking at the cut induced by $V(T_k)$, so $w(e_k) \le w(e').$</p>
+            <p>If $w(e_k) < w(e')$, then $w(T') = w(T^{*}) + w(e_k) - w(e') < w(T^*)$ which is impossible, since $w(T') is smaller than the 
+            weight of a MST.</p>
+            <p>If $w(e_k) = w(e')$, then $w(T) = w(T^*)$, so $T'$ is a MST. And $T'$ contains $T_{k+1}$ as a subgraph (since it contains $e_k$)</p>
+            <p>This completes the induction.</p>
+        </div>
+        </div>
+        <br>
+        <h1>Travelling Salesman Problem (TSP)</h1>
+        <p>Goal: Find a Hamilton cycle (cycle that uses all vertices) of minimum weight.</p>
+        <p style="color:red">No polynomial time algorithm is known so far. Restrict weights to Euclidean distance.</p>
+        <strong>Approximate Algorithm:</strong>
+        <ol>
+            <li>find the minimum spanning tree T</li>
+            <li>double all edges</li>
+            <li>find an Eulidean circuit</li>
+            <li>find a hamilton cycle by skipping repeated vertices (take the short cut)</li>
+        </ol>
+        <h3>Theorem: The approx. algorithm produces a cycle whose weigth is at most twice the best possible Hamilton cycle.</h3>
+        <div style="color:blue">
+            <p>Proof: Let $C^*$ be a min. weigth Hamilton cycle, $C^* -e$ is a spanning tree. so $w(c^*) \ge w(T)$</p>
+            <p>If C is the cycle from the approximate algorithm, then the $w(c) \le 2w(T)$ since we are taking short cut using triangle-inequality. so $w(c) \le 2w(c^*)$</p>
+        </div>
+        <a href="#top" style="position:fixed;right:20px;bottom:20px">Back To Top</a>
+    </body>
+</html>
