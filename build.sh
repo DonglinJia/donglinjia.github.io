@@ -1,6 +1,7 @@
 #!/bin/bash
 
-cp ../cs360/lecture.pdf /Theory_of_computing
+cp ../../cs360/lecture.pdf /Users/leo/Documents/Website/Theory_of_computing
+#cp ../cs360/lecture.pdf /Theory_of_computing
 
 git add .
 if [ $? -ne 0 ]; then
