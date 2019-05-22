@@ -18,6 +18,7 @@
         <h4><a href="#CS">Critical Section</a></h4>
         <h4><a href="#rc">Race condition</a></h4>
         <h4><a href="#lock">Lock</a></h4>
+        <h4><a href="#tb">Thread Blocking</a></h4>
         <h2 id="Thread">Thread</h2>
         <ul>
             <li><strong>What is a thread?</strong>
@@ -241,7 +242,7 @@
         </ul>
         <h2 id="lock">Enforcing Mutual Exclusion With Lock</h2>
         <ul>
-            <li>acquire/release must ensure that only one thread at a time can hold the lock, even if both attempt to Acquire at the same time.</li>
+            <li>Acquire/release must ensure that only one thread at a time can hold the lock, even if both attempt to Acquire at the same time.</li>
             <li>If a thread cannot Acquire the lock immediately, it must wait until the lock is available.</li>
             <li>Must <strong style="color: red">ACQUIRE</strong> the lock before exeucting the shared variable.</li>
             <li>C code cannot stop the interrupts & context switch, we need hardware to help 
@@ -249,6 +250,55 @@
                     <li>provide a way to implement <strong style="color: red">atomic test-and-set</strong> (i.e. atomic means cannot be interrupted!) for synchoronization primitives like locks</li>
                 </ul>
             </li>
+            <li>Mips & Arm use pair of value to implement Test-and-Set, they use the pair of values to check only.
+                <ul>
+                    <li>load-link: ll get the lock immediately;</li>
+                    <li>store conditionally: sc get the value of the current lock;</li>
+                    <li>return success if both value are the same; fail otherwise
+                        <ul>
+                            <li>if success: return tmp (which is the old value (immediate value of lock))
+                                <ul>
+                                    <li>if tmp is false, then we get the lock</li>
+                                    <li>if tmp is true, then we keep spinning</li>
+                                </ul>
+                            </li>
+                            <li>
+                                if fail: return true, then we kepp spinning
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </li>
+            <li>Spinlock and lock
+                <ul>
+                    <li>They both have a owener!
+                        <ul>
+                            <li>spinlock is owned by CPU</li>
+                            <li>lock is owned by thread</li>
+                        </ul>
+                    </li>
+                    <li>Spinlock <strong style="color:red">disable</strong> the interrupts
+                        <ul>
+                            <li>minimize the spinning</li>
+                            <li>preemption is disable on the CPU --> because they are doing busy wait --> take up CPU</li>
+                            <li><strong style="color:red">DO NOT</strong> use spin lock to protect large critical sections</li>
+                        </ul>
+                    </li>
+                    <li>Some CPU can queue some interrupts during the spinlock is on</li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="tb">Thread Blocking</h2>
+        <ul>
+            <li>When a thread blocks, it stops running:
+            <ul>
+                <li>The scheduler chooses a new thread to run</li>
+                <li>A context switch from the blocking thread to a new thread occurs</li>
+                <li>The blocking thread is queued in a <strong style="color:red">wait queue</strong></li>
+            </ul>
+            </li>
+            <li>Eventually, a blocked thread is signaled and awakened by another thread.</li>
         </ul>
         <a href="#top" style="position:fixed; right: 20px; top: 50px">Back To Top</a>
     </body>
