@@ -2,7 +2,18 @@
 <html>
     <head>
         <title>Leo | Operating System</title>
-        <link rel="stylesheet" href="oscss.css">    
+        <link rel="stylesheet" href="oscss.css">
+        <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async>
+    </script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                processEscapes: true
+            }
+        });
+    </script>  
     </head>
     <body>
         <h1 id="top">Operating System</h1>
@@ -20,6 +31,7 @@
         <h4><a href="#lock">Lock</a></h4>
         <h4><a href="#tb">Thread Blocking</a></h4>
         <h4><a href="#sem">Semaphores</a></h4>
+        <h4><a href="#cv">Condition Variables</a></h4>
 
         <h2 id="Thread">Thread</h2>
         <ul>
@@ -315,9 +327,9 @@
                     <li>No way to check the value of the counter in C, the only thing to do is P & V</li>
                 </ul>
             </li>
-            <li>Type of Semaphores:
+            <li><strong>Type of Semaphores:</strong>
                 <ul>
-                    <li><strong>>Binary Semaphore:</strong>
+                    <li><strong>Binary Semaphore:</strong>
                         <ul>
                             <li>Similar to the lock, create with one initial resouce, when P it, take one resouce, V it, return one resource.</li>
                             <li>Do P first, then V. --> offer mutual exclusion</li>
@@ -354,20 +366,19 @@
                 <p>remove item from the buffer</p>
                 <p>V(spaces)</p>
             </li>
-            <li>Condition Variables
-                <ul>
-                    <li>The safe to simultaneously fall asleep and give up the lock, so other threads can change the condition, then wake up by someone and own the lock</li>
-                    <li>wait: give up the lock --> go to sleep --> acquire the lock</li>
-                </ul>
-            </li>
-            <li>Difference:
-                <ul>
-                    <li>lock: mutual exclusion</li>
-                    <li>sempahore: resources</li>
-                    <li>CV: conditions </li>
-                </ul>
-            </li>
         </ul>
+        <h2 id="cv">Condition Variables</h2>
+            <ul>
+                <li>The safe to simultaneously fall asleep and give up the lock, so other threads can change the condition, then wake up by someone and own the lock</li>
+                <li>wait: give up the lock --> go to sleep --> acquire the lock</li>
+                <li><strong>Difference:</strong>
+                    <ul>
+                        <li>lock: mutual exclusion</li>
+                        <li>sempahore: resources</li>
+                        <li>CV: conditions </li>
+                    </ul>
+                </li>
+            </ul>
         <a href="#top" style="position:fixed; right: 20px; top: 50px">Back To Top</a>
     </body>
 </html>
