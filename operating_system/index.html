@@ -19,6 +19,8 @@
         <h4><a href="#rc">Race Condition</a></h4>
         <h4><a href="#lock">Lock</a></h4>
         <h4><a href="#tb">Thread Blocking</a></h4>
+        <h4><a href="#sem">Semaphores</a></h4>
+
         <h2 id="Thread">Thread</h2>
         <ul>
             <li><strong>What is a thread?</strong>
@@ -263,7 +265,7 @@
                                 </ul>
                             </li>
                             <li>
-                                if fail: return true, then we kepp spinning
+                                if fail: return true, then we keep spinning
                             </li>
                         </ul>
                     </li>
@@ -299,6 +301,72 @@
             </ul>
             </li>
             <li>Eventually, a blocked thread is signaled and awakened by another thread.</li>
+        </ul>
+        <h2 id="sem">Semaphores</h2>
+        <ul>
+            <li>Keep tracking the number of resources that are available. Try to synchoronizate in terms of number of resources</li>
+            <li><strong style="color:red">Ownership!</strong> lock care about, but semaphores does not</li>
+            <li>Can release it without own it</li>
+            <li>Having a counter to keep track, the counter is non-negative.
+                <ul>
+                    <li>If the counter is zero, we go to sleep and wait for the counter to be anything else</li>
+                    <li>If the counter is greater than zero, we take the resourse and decrement the counter</li>
+                    <li>P(take the resourse, space++, item--) vs V(return the resourse, space--, item++)</li>
+                    <li>No way to check the value of the counter in C, the only thing to do is P & V</li>
+                </ul>
+            </li>
+            <li>Type of Semaphores:
+                <ul>
+                    <li><strong>>Binary Semaphore:</strong>
+                        <ul>
+                            <li>Similar to the lock, create with one initial resouce, when P it, take one resouce, V it, return one resource.</li>
+                            <li>Do P first, then V. --> offer mutual exclusion</li>
+                            <li>Initial resource and Maxmimun resource are 1</li>
+                        </ul>
+                    </li>
+                    <li><strong>Counting semaphore:</strong>
+                        <ul>
+                            <li>A semaphore with an arbitrary number of resouces, no maximum resources</li>
+                            <li>Do not care about the order of P and V</li>
+                        </ul>
+                    </li>
+                    <li><strong>Barrier semaphore:</strong>
+                        <ul>
+                            <li>Use semaphore to force one thread wait another thread to finish.</li>
+                            <li>Start the semaphore with zero resouces;</li> 
+                            <li>Threads need to wait for the other thread needs to P sempahore once, for the threads are waiting on has to V the semaphore to access</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>Proceducer/Consumer Synchronization
+                <p>struct semaphore* Item, Space</p>
+                <p>Item = sem_create("Buffer Item", 0);</p>
+                <p>Space = sem_create("Buffer Spaces", N)</p>
+                <br>
+                <p>Producer's Pseudo-code:</p>
+                <p>P(Spaces)</p>
+                <p>add item to the buffer</p>
+                <p>V(Items)</p>
+                <br>
+                <p>Consumer's Pseudo-code:</p>
+                <p>P(Items)</p>
+                <p>remove item from the buffer</p>
+                <p>V(spaces)</p>
+            </li>
+            <li>Condition Variables
+                <ul>
+                    <li>The safe to simultaneously fall asleep and give up the lock, so other threads can change the condition, then wake up by someone and own the lock</li>
+                    <li>wait: give up the lock --> go to sleep --> acquire the lock</li>
+                </ul>
+            </li>
+            <li>Difference:
+                <ul>
+                    <li>lock: mutual exclusion</li>
+                    <li>sempahore: resources</li>
+                    <li>CV: conditions </li>
+                </ul>
+            </li>
         </ul>
         <a href="#top" style="position:fixed; right: 20px; top: 50px">Back To Top</a>
     </body>
