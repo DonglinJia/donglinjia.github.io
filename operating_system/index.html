@@ -32,6 +32,7 @@
         <h4><a href="#tb">Thread Blocking</a></h4>
         <h4><a href="#sem">Semaphores</a></h4>
         <h4><a href="#cv">Condition Variables</a></h4>
+        <h4><a href="#dd">Deadlock</a></h4>
 
         <h2 id="Thread">Thread</h2>
         <ul>
@@ -243,8 +244,17 @@
             <li>Source of race conditions:
                 <ul>
                     <li>implementation</li>
-                    <li></li>
-                    <li></li>
+                    <li>compiler</li>
+                    <li>CPU</li>
+                </ul>
+            </li>
+            <li>compiler and CPU introduce the race conditions due to optimization -- rearranging the code</li>
+            <li>By applying memory model, CPU and complier knows which optimization is safe/unsafe</li>
+            <li>In C99, volatile disable the optimization of CPU
+                <ul>
+                    <li>register allocation optimization: it keeps the up-to-date value in a register for as long as possible can</li>
+                    <li>func a, func b, might use different register for register allocation --> do not know which one has the up-to-date value</li>
+                    <li>volatile --> turn register optimization off; it forces to load from memory for every use</li>
                 </ul>
             </li>
             <li>Identify race conditions
@@ -379,6 +389,16 @@
                     </ul>
                 </li>
             </ul>
+        <h2 id="dd">Deadlocks</h2>
+        <li>It forever stopped and never execute or make any progress</li>
+        <li>Program stops running</li>
+        <li>OS cannot detect the deadlock; since it cannot differentiate the deadlock or waiting for something</li>
+        <li><strong>Solutions:</strong>
+            <ul>
+                <li>No Hold and Wait: prevent a thread from requesting resource while owning a resource (no wait, includes sleep and busy wait)</li>
+                <li>Resource Ordering: Order the resource types and require that each thread acquire resources in increasing resource type order. (acquire in increasing order)</li>
+            </ul>
+        </li>
         <a href="#top" style="position:fixed; right: 20px; top: 50px">Back To Top</a>
     </body>
 </html>
