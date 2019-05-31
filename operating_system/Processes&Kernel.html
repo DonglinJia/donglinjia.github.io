@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Processes and Kernel</title>
+        <link rel="stylesheet" href="oscss.css">
+    </head>
+    <body>
+        <h1 id="top">Processes and the Kernel</h1>
+        <a id="gh" href="index.html" style="position: fixed; right: 20px; top: 20px;">Go to previous page</a>
+        <h2>Processes</h2>
+        <ul>
+            <li>Processes never execute codes, only <strong>thread</strong>execute the code</li>
+            <li>Processes has at least one thread.</li>
+            <li>Execution environment created by OS for the program to run in; A structure that contains every thing that a program needs to run</li>
+            <li>Every process has its <strong>own</strong> process space, has <strong>own</strong> array of threads
+                <ul>
+                    <li>each tag in chrome is a process --> has its own address space</li>
+                </ul>
+            </li>
+            <li>Lots of processes running will slow down the server</li>
+            <li>Using <strong>Top</strong> to check the current state of the system</li>
+            <li>Using PID (Process Identification) --> every process has its own unique PID</li>
+            <li>OS needs to keep track of every process that in the system --> maintain, search, edit, etc</li>
+            <li><strong>fork</strong>
+            <ul>
+                <li>Create a new process that is identical clone of the caller (parent)</li>
+                <li style="color:red">Although it has its own address space and own thread array, the program and the address space
+                     is an identical clone copy of the parent --> the heap, stack, the global, the code, the program counter, the thread, the registers are the same</li>
+                <li>Process considers the relationship --> with fork, we need to maintain the inside process structure and our relationship to children</li>
+                <li>The caller fork is parent and new process is child --> needs to maintain this relationship </li>
+                <li>Program counter is the same, so after executing, it means when they return from executing they both execute the same instruction 
+                    -> both of children and parents return from fork </li>
+                <li>The return value for parent and children are different:
+                    <ul>
+                        <li>For the fork return, parent return the PID of the child</li>
+                        <li>Child fork returns 0</li>
+                        <li style="color: red">each process has its own PID --> they do not share process space --> but the content
+                        of that address space are the same.</li>
+                    </ul>
+                </li>
+            </ul>
+            </li>
+            <li><strong>_exit</strong>
+                <ul>
+                    <li>It terminates the calling process</li>
+                    <li>Keep track of why the process is terminated -> leave a message (integer --> exit status) --> why the process died</li>
+                </ul>
+            </li>
+            <li><strong>waitpid</strong>
+                <ul>
+                    <li>Let a process wait for another to terminate and retrieve its exist status code</li>
+                    <li style="color: red">the current process will be blocked until the waited process terminates --> after wake up --> waitpid retrive the reason(message) the process die</li>
+                    <li style="color: red">process only allow to wait on its children --> only care about its children</li>
+                    <li>One process death does not affect its child process</li>
+                </ul>
+            </li>
+            <li><strong>execv</strong>
+                <ul>
+                    <li>changes the program that a process is running --> does not create a new program</li>
+                    <li>keep PID, process structure, <dev style="color: red">child-parent relationship</dev> same</li>
+                    <li>address space and thread changes</li>
+                    <li>execv takes two params
+                        <ul>
+                            <li>the second of params is a pointer to array of arguments</li>
+                            <li>if execv does work, it does not return</li>
+                            <li>take the old address space and create a new address space --> cannot return old address space</li>
+                            <li>return if fail --> try to load program --> fail
+                                <ul>
+                                    <li>wrong program</li>
+                                    <li>not enough memory for creating address space</li>
+                                    <li>not enough space for creating threads</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <a href="#top" style="position:fixed; right: 20px; top: 50px">Back To Top</a>
+    </body>
+</html>
