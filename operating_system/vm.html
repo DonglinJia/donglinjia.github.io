@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Processes and Kernel</title>
+        <link rel="stylesheet" href="oscss.css">
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async>
+        </script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    processEscapes: true
+                }
+            });
+        </script>  
+    </head>
+    <body>
+        <h1 id="top">Virtual Memory</h1>
+        <a id="gh" href="index.html" style="position: fixed; right: 20px; top: 20px;">Go to previous page</a>
+        <ul>
+            <li>Every user program is using virtual memory --> it is fake physical memory
+            <ul>
+                <li>Isolation from the physical memory</li>
+                <li>Security reason</li>
+            </ul>
+            </li>
+            <li>Translation from virtual address to physical address --> help determine CPU which process is running</li>
+            <li>Different process using different translation (parameters to that translation function is different
+                based on the process) --> CPU only translate current process --> proccess is isolated.</li>
+        </ul>
+        <h2>Physical Memory</h2>
+        <ul>
+            <li>If physical addresses are P bits, then the maximum amount of addressable physical memory is $2^{p}$ bytes.</li>
+            <li>OS manage the memory</li>
+            <li>Most compiler only do 32 bits --> only 4GB RAM has been used --> if want to use 8GB --> switch to 64bits compile</li>
+        </ul>
+        <h2>Virtual Memory</h2>
+        <ul>
+            <li>Kernel provides a separate, private virtual memory for each process</li>
+            <li>The virtual memory of a process holds the code, data, and stack for the program that is running in that process.</li>
+            <li>It is possible to use more bits virtual than physical
+                <ul>
+                    <li>store the address on disk</li>
+                    <li>load part of the address when we need it</li>
+                </ul>
+            </li>
+            <li>If virtual memory are V bits, the maximum size of a virtual memory is $2^v$ bytes</li>
+            <li>Running applications see only virtual address.</li>
+            <li>Everything in user program are using virtual memory. --> never ever see physical address</li>
+            <li>Each process is isolated in its virtual memory and cannot access other process' virtual memories</li>
+            <li>Why VM?
+                <ul>
+                    <li>isolate processes from each other</li>
+                    <li>potential to support VM larger than physical memory</li>
+                    <li>more process running</li>
+                </ul>
+            </li>
+        </ul>
+        <h2>Address Translation</h2>
+        <ul>
+            <li>Each virtual memory is mapped to a different part of physical memory</li>
+            <li>At least one translation required for every assembly instruction (i.e. program counter)</li>
+            <li>Virtual address is translated to its corresponding physcial address</li>
+            <li>Address translation is performed in HARDWARE. (MMU -> Memory Management Unit) provided by the kernel.</li>
+        </ul>
+        <h2>Virtual Memory implementation</h2>
+        <ul>
+            <li>Goals:
+                <ul>
+                    <li>1. Transparency: user program believe everything is real</li>
+                    <li>2. Protection: offer isolation from different processes</li>
+                    <li>3. Efficiecny: need to be done for every single instruction</li>
+                </ul>
+            </li>
+            <li>Dynamic Relocation:
+                <ul>
+                    <li>For each process we need to store 2 integers --> offset and size</li>
+                    <li>if size < limit, just add the offset</li>
+                    <li>if not --> raise exception and terminate the program</li>
+                    <li>Although efficient, suffer fragmentation</li>
+                    <li>Memory waste problem --> 1KB used (stack start from the middle) --> 2KB needed</li>
+                </ul>
+            </li>
+            <li>Segmentation:
+                <ul>
+                    <li>Instead of allocating a continue chunk of memory, we only allocate the exact memory that going to use --> allocate
+                        3 times (data, code, stack) instead of once.
+                    </li>
+                    <li>Then we do dynamic allocation on the segment</li>
+                    <li>The kernel maintains an offset and limit for each segment --> hardware tells OS # of segment to support</li>
+                    <li>K bits for the segment ID, we have up to $2^k$ segments with $2^{v-k}$ bytes per segment</li>
+                    <li>VM: seg# | offset --> hex </li>
+                    <li>MMU has a relocation register and limit register for each segment
+                        <ul>
+                            <li>split the VM into segment number and address within segment</li>
+                            <li>if offset (i.e. the second part of VM separated from seg#) $\ge$ limit --> raise exception</li>
+                            <li>else p = offset + relocation offset</li>
+                            <li>Efficient on space and time --> two value stored for segment</li>
+                            <li>MMU is large(multiple registers)--> take physical space (too many MMU footprint) --> take too much CPU space</li>
+                        </ul>
+                    </li>
+                    
+                </ul>
+            </li>
+        </ul>
+        <a href="#top" style="position:fixed; right: 20px; top: 50px">Back To Top</a>
+    </body>
+</html>

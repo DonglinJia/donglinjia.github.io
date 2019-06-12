@@ -76,6 +76,137 @@
                 </ul>
             </li>
         </ul>
-        <a href="#top" style="position:fixed; right: 20px; top: 50px">Back To Top</a>
+        <h2>System Calls</h2>
+        <ul>
+        <li>The calls that programmer use to interact with kernel.</li>
+        <li><strong>Everything</strong> is done by kernel. (open files, print, all the function calls)</li>
+        <li>Make a system call (system functions) use the system calls library (it is <strong style="color: red">NOT</strong> part of 
+            kernel) -> ask kernel to do -> return to the user program</li>
+        <li>User privileged VS kernel privileged
+            <ul>
+                <li>User program --> unpriviledged code </li>
+                <li>Kernel priviledged --> priviledged code </li>
+            </ul>
+        </li>
+        <li>Kernel Privilege (high-level privilege)
+            <ul>
+                <li>Execution privilege controled by CPU</li>
+                <li>User program has least privilege --> cannot execute/assess only permitted privileged code --> throw exception</li>
+                <li>User program cannot directly call kernel functions or access kernel data structure</li>
+                <li>The only way to run kernel code is by interruptions(hardware) and exceptions(software)</li>
+            </ul>
+        </li>
+        <li>To perform a system call, the application needs to cause an exception to make the system call
+            <ul>
+                <li>li v0 0 --> v0 put the syscall code</li>
+                <li>The kernel checks v0 to determine which system call has been requested --> using kernel ABI (Application Binary Interface)</li>
+                <li>ABI all the information to share with user (size of Int, type, syscall code)</li>
+            </ul>
+        </li>
+        
+        <li><strong>Interrupts</strong></li>
+        <ul>
+            <li>Interrupts are raised by hardward</li>
+            <li>CPU receive the interrupts --> find the kernel(by using the stored address of interrupt handler) --> 
+                CPU execuate the interrupt handler --> flip to the kernel privilege mode --> interrupt handler save the 
+                stage, trap frame --> kernel do things
+            </li>
+        </ul>
+        <li><strong>Exceptions</strong></li>
+        <ul>
+            <li>CPU raise the exceptions --> flip privilege --> call the predetermined location --> exception handler</li>
+            <li>exception handler is part of the kernel</li>
+            <li>MIPs treat exceptions and interrupts are the same</li>
+        </ul>
+        <li>System calls take parameters and return values</li>
+        <li>The application places parameter value in kernel-specified location before the syscall,
+            and looks for return value in that location after the exception handler returns
+            <ul>
+            <li>How do the application know the kernel-specified location?
+                <ul>
+                <li>The locations are part of the kernel ABI</li>
+            </ul>
+            </li>
+            <li>Parameter and return value placement is handled by the application system call library functions.</li>
+            <li>On MIPS, parameters go in registers a0,a1,a2,a3
+                <ul>
+                <li>result success/fail code is in a3 on return</li>
+                <li>return value or error code is in v0 on return
+                    <ul>
+                        <li>lw a0 ... a3</li>
+                        <li>syscall --> raise exception</li>
+                    </ul>
+                </li>
+                <li>If a3 return success, then v0 has return value</li>
+                <li>If a3 return fail, then v0 has error code(from AVI)</li>
+            </ul>
+            </li>
+        </ul>
+        </li>
+        <li><strong>System Call Software Stack</strong>
+            <ul>
+                <li>Application calls library wrapper function for desired system call</li>
+                <li>Library function performs syscall instruction</li>
+                <li>Kernel exception handler runs
+                    <ul>
+                        <li>create trap frame to save program state</li>
+                        <li>determine this is a syscall exception</li>
+                        <li>determine which system call is being requested</li>
+                        <li>call the kernel implementation of it</li>
+                        <li>set the return value</li>
+                        <li>flip the priviledge back to kernel</li>
+                        <li>return from the exception</li>
+                    </ul>
+                </li>
+                <li>library wrapper function finishes and returns from its call</li>
+                <li>application continues execution</li>
+            </ul>
+        </li>
+        <li>System call is expensive!!!</li>
+        <li>User program is totally isolated from implementation of Kernel</li>
+        <li>Example on System call
+            <ul>
+                <li>printf</li>
+                <li>malloc --> depends, if there is no enough memory space, malloc needs to ask OS for more memory</li>
+            </ul>
+        </li>
+        <li>User and Kernel Stacks
+            <ul>
+                <li>Every OS process thread has two stacks, although it only uses one at a time
+                    <li>User Stack: while application code is executing 
+                        <ul>
+                            <li>located in the application's virtual memory (address space)</li>
+                            <li>Only go </li>
+                        </ul>
+                    </li>
+                    <li>Kernel Stack: used while the thread is executing kernel code, after an exception or interrupt
+                        <ul>
+                            <li>Lives in the kernel</li>
+                            <li>Stack holds the trap frames and switch frames (because kernel creates those two frames) </li>
+                        </ul>
+                    </li>
+                </li>
+                <li>In order to avoid user stack to modify kernel stack, so when flip to kernel mode --> everything(kernel's) flip to the kernel stack</li>
+                <li>Kernerl stack can overflow the user stack, so we keep they are separated.</li>
+            </ul>
+        </li>
+        <li>Multiprocessing
+            <ul>
+                <li>Multiple processes existing at the same time</li>
+                <li>All process share the availabe hardware resources.</li>
+                <li>Thread execute the program instead of process --> we still have context switch, thread yield, thread_switch</li>
+                <li>The OS ensures that processes are isolated from one another.</li>
+            </ul>
+        </li>
+    </ul>
+    <ul>
+        <li>kernel library --> v0 put the system call code, in a0 - a3 put the parameter to tell which system call --> raise the exception
+        --> switch priviledge mode and disable interruption --> execute the common exception handler --> switch the user stack to the kernel stack--
+        --> common exception handler save the trap frame on the kernel stack --> common exception called mips trap --> mis trap figure out which exception is it -->
+        turn the interruption on --> called that specific exception handler (syscall --> system call dispatcher)  --> inside dispatcher (get v0 a0-a3) --> fork (e.g.) --> call sysfork
+        --> return a3(succeed, fail) v0 (succeed code, error code) --> system call return to mips trap --> return common exception --> restore the trap frame to the CPU and flip back user stack -->
+        switch to unpriviledge to priviledge mode --> user program running</li>
+    </ul>
+    <a href="#top" style="position:fixed; right: 20px; top: 50px">Back To Top</a>
     </body>
 </html>
