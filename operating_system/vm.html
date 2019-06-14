@@ -37,7 +37,7 @@
         </ul>
         <h2>Virtual Memory</h2>
         <ul>
-            <li>Kernel provides a separate, private virtual memory for each process</li>
+            <li>Kernel provides a <dev style="color: red">separate, private virtual memory for each process</dev></li>
             <li>The virtual memory of a process holds the code, data, and stack for the program that is running in that process.</li>
             <li>It is possible to use more bits virtual than physical
                 <ul>
@@ -68,21 +68,21 @@
         <ul>
             <li>Goals:
                 <ul>
-                    <li>1. Transparency: user program believe everything is real</li>
-                    <li>2. Protection: offer isolation from different processes</li>
-                    <li>3. Efficiecny: need to be done for every single instruction</li>
+                    <li>1. Transparency: user program believes the address is real</li>
+                    <li>2. Protection: offer isolation from different processes and kernel</li>
+                    <li>3. Efficiency: need to be done for every single instruction</li>
                 </ul>
             </li>
-            <li>Dynamic Relocation:
+            <li><strong>Dynamic Relocation:</strong>
                 <ul>
                     <li>For each process we need to store 2 integers --> offset and size</li>
                     <li>if size < limit, just add the offset</li>
                     <li>if not --> raise exception and terminate the program</li>
-                    <li>Although efficient, suffer fragmentation</li>
-                    <li>Memory waste problem --> 1KB used (stack start from the middle) --> 2KB needed</li>
+                    <li>Although efficient, suffer fragmentation --> external waste space</li>
+                    <li>Memory waste problem --> 1KB used (stack start from the middle) --> 2KB needed --> internal waste space</li>
                 </ul>
             </li>
-            <li>Segmentation:
+            <li><strong>Segmentation:</strong>
                 <ul>
                     <li>Instead of allocating a continue chunk of memory, we only allocate the exact memory that going to use --> allocate
                         3 times (data, code, stack) instead of once.
@@ -90,20 +90,50 @@
                     <li>Then we do dynamic allocation on the segment</li>
                     <li>The kernel maintains an offset and limit for each segment --> hardware tells OS # of segment to support</li>
                     <li>K bits for the segment ID, we have up to $2^k$ segments with $2^{v-k}$ bytes per segment</li>
-                    <li>VM: seg# | offset --> hex </li>
+                    <li>address: seg# | offset --> hex </li>
                     <li>MMU has a relocation register and limit register for each segment
                         <ul>
                             <li>split the VM into segment number and address within segment</li>
                             <li>if offset (i.e. the second part of VM separated from seg#) $\ge$ limit --> raise exception</li>
                             <li>else p = offset + relocation offset</li>
                             <li>Efficient on space and time --> two value stored for segment</li>
+                        </ul>
+                    </li>
+                    <li>Disadvantage:
+                        <ul>
+                            <li>Fragmentation problem</li>
                             <li>MMU is large(multiple registers)--> take physical space (too many MMU footprint) --> take too much CPU space</li>
                         </ul>
                     </li>
-                    
+                </ul>
+            </li>
+            <li><strong>Paging</strong>
+                <ul>
+                    <li>Logically divide physical memory equal size $\rightarrow$ physical page / frame; normally we have 4KB.</li>
+                    <li>To get fragmentation: let any page of virtual memory map to any frame of physical memory.</li>
+                    <li>We never allocate the chunk of memory, instead we only allocate several individual memory for one frame --> no more external fragmentation</li>
+                    <li>But still have internal fragmentation --> since the smallest page is 4KB, so might lose a little bit $\rightarrow$ dont care!</li>
+                    <li>Any page --> Any frame --> Any memory location (more process running than the RAM support)</li>
+                </ul>
+            </li>
+            <li><strong>Page Tables</strong>
+                <ul>
+                    <li>It has frame number and valid bit</li>
+                    <li>Valid bit --> track whether the page is in use --> through exception if not</li>
+                    <li>Number of PTEs(Page Table Entry) = Maximum Virtual Memory Size / Page Size
+                        <ul>
+                            <li>e.g. 32-bit virtual address --> $2^32$ Memory Size</li>
+                            <li>page size of $2^12$ bytes --> we have $2^20$ PTEs</li>
+                        </ul>
+                    </li>
+                    <li>Determine the page number and offset --> PG# | offset</li>
+                    <li>Number of Bits for PG# = $\log$(Number of PTEs)</li>
+                    <li>Number of Bits for Offset = $\log$(Page size)</li>
                 </ul>
             </li>
         </ul>
+
+        
         <a href="#top" style="position:fixed; right: 20px; top: 50px">Back To Top</a>
     </body>
 </html>
