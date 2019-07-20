@@ -93,5 +93,32 @@
             <li>When $d_v=5, d_f=3, n=12, m=30, s=20$, it is a <a href="https://en.wikipedia.org/wiki/Icosahedron" target="_blank">icosahedron</a></li>
         </ul>
         <a href="#top" style="position:fixed;right:20px;bottom:20px">Back To Top</a>
+        <br>
+
+        <h1>Non-planar graphs</h1>
+        <h2>Key definitions</h2>
+        <ul>
+            <li>One way to prove non-planar graph is to show that it has more than 3n-6 edges</li>
+            <li>When $n\ge 3$, a connected planar graph on n vertices has <strong style="color: red">at most</strong>3n - 6 edges</li>
+            <li style="color:blue">Proof:
+                    <div>Consider a planar embedding of G with $n \ge 3$ vertices, m edges and s faces. <br>
+                        If G is a tree, then we have $m = n-1$ edges, where $n-1 \le 3n-6$ is satisfied for $n\ge 3$ <br>
+                        If G is a tree, then G has a cycle, there are at least 2 faces, each face boundary must contains a cycle to separate from other faces (Jordan curve theorem). So each face has degree at least 3. <br>
+                        By handshaking lemma for faces, $2m = \sum_{f\in F}^{deg(f)} \ge 3 \cdot s$ <br>
+                        So $2m \ge 3m = 3 (2 - n +m) by Euler's formula <br>
+                        Therefore $m \le 3n-6$
+                    </div>
+            </li>
+            <li>Note Disconnected planar graphs have "fewer" edges that a connected one, so that applies to disconnected graph as well.</li>
+            <li>Corollary: $k_5$ is not planar, same with $k_{3,3}$</li>
+            <li>Theorem: A connected bipartite planar graph has at least 3 vertices has at most 2n-4 edges</li>
+            <li>Kuratowski's Theorem:
+                <ul>
+                    <li>An edge subdivision of G is obtained by replacing each edge of G with a new path of length at least 1 (i.e. introducing new vertices of degree 2 to the edges) Observation: G is a planar iff every edge subdivision is a planar.</li>
+                    <li>G is planar iff G does not contain an edge subdivision of $k_5$ and $k_{3,3}$</li>
+                    <li style="color: red">Note: do not repeat vertices or edges in the subdivision</li>
+                </ul>
+            </li>
+        </ul>
     </body>
 </html>
