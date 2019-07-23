@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        img {
+            height: 100px;
+            width: 150px;
+        }
+        h1 {
+            text-align: center
+        }
+        body {
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-image: url("earth.jpg");
+            color:white;
+            text-align: center;
+        }
+        table {
+            border-spacing: 30px;
+        }
+        table.center {
+            margin-left:auto; 
+            margin-right:auto;
+        }
+        tr {
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript">
+        function display() {
+            var refresh = 1000;
+            setTimeout('display_time()',refresh);
+        }
+        function display_time() {
+            var time = new Date();
+            document.getElementById("CNDate").innerHTML = time.toLocaleString("zh-Hans-CN-u-nu", {timeZone: "Asia/Shanghai"});
+            document.getElementById("RSDate").innerHTML = time.toLocaleString("ru-RU", {timeZone: "Europe/Moscow"});
+            document.getElementById("NMDate").innerHTML = time.toLocaleString("en-CA", {timeZone: "America/Toronto"});
+            document.getElementById("BSDate").innerHTML = time.toLocaleString("en-GB", {timeZone: "Europe/London"});
+            document.getElementById("ASDate").innerHTML = time.toLocaleString("en-AU", {timeZone: "Australia/Brisbane"});
+            document.getElementById("GMDate").innerHTML = time.toLocaleString("de-DE", {timeZone: "Europe/Berlin"});
+            document.getElementById("SGDate").innerHTML = time.toLocaleString("en-SG", {timeZone: "Asia/Singapore"});
+            document.getElementById("JPDate").innerHTML = time.toLocaleString("ja-JP", {timeZone: "Asia/Tokyo"});
+            document.getElementById("KRDate").innerHTML = time.toLocaleString("ko-KR", {timeZone: "Asia/Seoul"});
+            display();
+        }
+        // function flag() {
+        //     var img = document.createElement("img");
+        //     img.src = "China.png";
+        //     var country = document.getElementById("China");
+        //     country.appendChild(img);
+        //     img.style.height = '150px';
+        //     img.style.width = '250px';
+        //     display_time();
+        // }
+    </script>
+</head>
+<body onload=display();>
+    <h1>Time-Zones for International students</h1>
+    <table class="center">
+        <tr>
+            <td>
+                <img src="China.png" alt="">
+                <div id="China">The time in China is: <span id="CNDate"></span></div>
+            </td>
+            <td>
+                <img style="width: 170px" src="canada.jpg" alt="">
+                <div id="Canada">The time in Canada is: <span id="NMDate"></span></div>
+            </td>
+            <td>
+                <img src="russia.png" alt="">
+                <div id="Russia">The time in Russia is: <span id="RSDate"></span></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="british.png" alt="">
+                <div id="UK">The time in British is: <span id="BSDate"></span></div>
+            </td>
+            <td>
+                <img src="germany.png" alt="">
+                <div id="GER">The time in German is: <span id="GMDate"></span></div>
+            </td>
+            <td>
+                <img src="singapore.png" alt="">
+                <div id="Sing">The time in Singapore is: <span id="SGDate"></span></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="japan.png" alt="">
+                <div id="JP">The time in Japan is: <span id="JPDate"></span></div>
+            </td>
+            <td>
+                <img src="aus.svg" alt="">
+                <div id="AUS">The time in Australia is: <span id="ASDate"></span></div>
+            </td>
+            <td>
+                <img src="korea.png" alt="">
+                <div id="KR">The time in Korea is: <span id="KRDate"></span></div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
