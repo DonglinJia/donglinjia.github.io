@@ -2,6 +2,7 @@
 
 cd Theory_of_computing
 cp ../../cs360/lecture.pdf .
+cp /Users/leo/Documents/IELTS/phrase.pdf .
 cd ..
 
 git add .
