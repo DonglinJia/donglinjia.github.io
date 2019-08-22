@@ -5,7 +5,7 @@ cp ../../cs360/lecture.pdf .
 cd ..
 
 cp ../IELTS/phrase.pdf .
-cd Website
+cd ../Website
 
 git add .
 if [ $? -ne 0 ]; then
