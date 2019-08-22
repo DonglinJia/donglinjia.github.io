@@ -2,8 +2,10 @@
 
 cd Theory_of_computing
 cp ../../cs360/lecture.pdf .
-cp /Users/leo/Documents/IELTS/phrase.pdf .
 cd ..
+
+cp ../IELTS/phrase.pdf .
+cd Website
 
 git add .
 if [ $? -ne 0 ]; then
